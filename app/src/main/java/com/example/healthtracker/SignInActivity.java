@@ -59,6 +59,8 @@
 package com.example.healthtracker;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
@@ -69,8 +71,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -81,6 +91,8 @@ public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "SignInActivity";
     private static final int REQUEST_SIGNUP = 0;
 
+    private FirebaseAuth mAuth;
+
     EditText _emailText;
     EditText _passwordText;
     MaterialButton _loginButton;
@@ -89,8 +101,10 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ButterKnife.inject(this);
         setContentView(R.layout.activity_sign_in);
+
+        mAuth = FirebaseAuth.getInstance();
+
         _emailText = (EditText)findViewById(R.id.input_email);
         _passwordText = (EditText)findViewById(R.id.input_password);
         _loginButton = (MaterialButton)findViewById(R.id.btn_login);
@@ -124,17 +138,32 @@ public class SignInActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        new android.os.Handler().postDelayed(
+                                () -> {
+                                    // On complete call either onLoginSuccess or onLoginFailed
+                                    onLoginSuccess();
+                                    // onLoginFailed();
+                                    progressDialog.dismiss();
+                                }, 3000);
+                        startActivity(new Intent(this, MainActivity.class));
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(SignInActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        new android.os.Handler().postDelayed(
+                                () -> {
+                                     onLoginFailed();
+                                    progressDialog.dismiss();
+                                }, 3000);
                     }
-                }, 3000);
+                });
     }
 
 
@@ -170,9 +199,24 @@ public class SignInActivity extends AppCompatActivity {
 
     public boolean validate() {
         boolean valid = true;
+        boolean validEmail = true;
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
+
+        try
+        {
+            InternetAddress emadd = new InternetAddress(email);
+            emadd.validate();
+        }catch (AddressException ex)
+        {
+            _emailText.setError("Email not correct: ");
+            validEmail = false;
+        }
+        if(validEmail)
+        {
+            _emailText.setError(null);
+        }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");

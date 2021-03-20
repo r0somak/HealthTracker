@@ -3,6 +3,7 @@ package com.example.healthtracker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,12 +48,6 @@ public class SignUpActivity extends AppCompatActivity {
         _createUserButton.setOnClickListener(v -> createAccount());
     }
 
-    @Override
-    public void onBackPressed() {
-        // disable going back to the MainActivity
-        moveTaskToBack(true);
-    }
-
     private void createAccount()
     {
         if (!validate()) {
@@ -60,6 +55,12 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
         _createUserButton.setEnabled(false);
+
+        final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Creating new account...");
+        progressDialog.show();
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
@@ -71,14 +72,21 @@ public class SignUpActivity extends AppCompatActivity {
                         Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                         mDatabase.child("users").child(user.getUid()).child("email").setValue(user.getEmail());
-                        Toast.makeText(SignUpActivity.this, "Account created.",
-                                Toast.LENGTH_SHORT).show();
+                        new android.os.Handler().postDelayed(
+                                () -> {
+                                    Toast.makeText(SignUpActivity.this, "Account created.",
+                                            Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
+                                }, 3000);
+                        startActivity(new Intent(this, MainActivity.class));
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                        onCreationFailed();
+                        new android.os.Handler().postDelayed(
+                                () -> {
+                                    onCreationFailed();
+                                    progressDialog.dismiss();
+                                }, 3000);
                     }
                 });
     }
