@@ -33,15 +33,15 @@ public class MainActivity extends AppCompatActivity {
         _userDisplayName.setText("Hello " + getUserName() + "!");
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            currentUser.reload();
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if(currentUser != null){
+//            currentUser.reload();
+//        }
+//    }
 
     @Nullable
     private String getUserPhotoUrl() {
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String getUserName() {
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
+        if (user != null && user.getDisplayName() != null) {
             if(user.getDisplayName().equals(""))
             {
                 return "Anonymous, please update your user name";
