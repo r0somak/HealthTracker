@@ -14,6 +14,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     MaterialButton _logOutButton;
+    MaterialButton _tempsButton;
+    MaterialButton _heartButton;
+    MaterialButton _calendarButton;
     TextView _userDisplayName;
 
 
@@ -29,6 +32,21 @@ public class MainActivity extends AppCompatActivity {
         _userDisplayName = (TextView)findViewById(R.id.user_display_name);
         _logOutButton = (MaterialButton)findViewById(R.id.btn_logout);
         _logOutButton.setOnClickListener(v -> signOut());
+
+        _tempsButton = (MaterialButton)findViewById(R.id.btn_temps);
+        _tempsButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, TemperatureActivity.class));
+        });
+
+        _heartButton = (MaterialButton)findViewById(R.id.btn_heart);
+        _heartButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, HeartActivity.class));
+        });
+
+        _calendarButton = (MaterialButton)findViewById(R.id.btn_calendar);
+        _calendarButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, CalendarActivity.class));
+        });
 
         _userDisplayName.setText("Hello " + getUserName() + "!");
     }
