@@ -7,9 +7,15 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/tvAnimalName"
-        android:layout_width="wrap_content"
+        android:id="@+id/tempDate"
+        android:layout_width="286dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tempVal"
+        android:layout_width="104dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
 
 </LinearLayout>

@@ -25,11 +25,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_temp"
+
+            <EditText
+                android:id="@+id/input_temp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="Temperature" />
+                android:hint="Temperature"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -45,6 +47,15 @@
             android:layout_width="match_parent"
             android:layout_height="335dp"
             android:id="@+id/temp_list"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_show_plot"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="Show plot"/>
 
     </LinearLayout>
 

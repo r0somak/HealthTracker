@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -102,9 +104,10 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
         q.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<String> data = new ArrayList<>();
+                List<Pair<String, String>> data = new ArrayList<>();
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    data.add(postSnapshot.getKey() + ": "+ postSnapshot.getValue());
+                    Pair<String, String> pair = new Pair<String, String>(postSnapshot.getKey(), postSnapshot.getValue().toString());
+                    data.add(pair);
                 }
 
                 adapter = new RecyclerViewAdapter(getBaseContext(), data);
@@ -126,14 +129,16 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
 
     public static String toISO8601UTC(Date date) {
         TimeZone tz = TimeZone.getDefault();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy', 'HH:mm:ss");
         df.setTimeZone(tz);
         return df.format(date);
     }
 
     public static Date fromISO8601UTC(String dateStr) {
         TimeZone tz = TimeZone.getDefault();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy', 'HH:mm:ss");
         df.setTimeZone(tz);
 
         try {

@@ -1,6 +1,8 @@
 package com.example.healthtracker;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,12 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
 {
-    private List<String> mData;
+    private List<Pair<String, String>> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    RecyclerViewAdapter(Context context, List<String> data) {
+    RecyclerViewAdapter(Context context, List<Pair<String, String>> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -32,8 +34,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+        Pair<String, String> dataPair = mData.get(position);
+        String date = dataPair.first;
+        String val = dataPair.second;
+        holder.myTextView.setText(date);
+        holder.tempVal.setText(val);
+        float f = Float.parseFloat(val);
+        if(f <= 36.0){
+            holder.tempVal.setTextColor(Color.BLUE);
+        }else if(f > 36.0 && f < 36.9){
+            holder.tempVal.setTextColor(Color.GREEN);
+        }else{
+            holder.tempVal.setTextColor(Color.RED);
+        }
+
     }
 
     // total number of rows
@@ -46,10 +60,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
+        TextView tempVal;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.tvAnimalName);
+            myTextView = itemView.findViewById(R.id.tempDate);
+            tempVal = itemView.findViewById(R.id.tempVal);
             itemView.setOnClickListener(this);
         }
 
@@ -61,7 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // convenience method for getting data at click position
     String getItem(int id) {
-        return mData.get(id);
+        return mData.get(id).toString();
     }
 
     // allows clicks events to be caught
