@@ -6,16 +6,19 @@
     android:orientation="horizontal"
     android:padding="10dp">
 
+
     <TextView
         android:id="@+id/tempDate"
-        android:layout_width="286dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_weight=".70"/>
 
     <TextView
         android:id="@+id/tempVal"
-        android:layout_width="104dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_weight=".30"/>
 
 </LinearLayout>
