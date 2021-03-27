@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -52,6 +53,8 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
     private static final String TAG = "TemperatureActivity";
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private Set set;
+    Line series1;
     FirebaseUser user;
     RecyclerViewAdapter adapter;
     ValueEventListener queryValueListener;
@@ -75,6 +78,7 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
         setContentView(R.layout.activity_temperature);
 
         _chartView = findViewById(R.id.chart_view);
+
         cartesian = AnyChart.line();
         cartesian.animation(true);
         cartesian.padding(10d, 20d, 5d, 20d);
@@ -84,6 +88,11 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
         cartesian.title("Trend of temperature over time");
         cartesian.yAxis(0).title("Temperature (Celsius)");
         cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
+        cartesian.legend().enabled(true);
+        cartesian.legend().fontSize(13d);
+        cartesian.legend().padding(0d, 0d, 10d, 0d);
+
+        _chartView.setChart(cartesian);
 
         _temperatureText = (EditText)findViewById(R.id.input_temp);
         _addTempButton = (MaterialButton)findViewById(R.id.btn_add_temp);
@@ -95,6 +104,8 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
 //        _recView.setAdapter(adapter);
 
         _addTempButton.setOnClickListener(v -> addTemp());
+
+
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
@@ -144,12 +155,15 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
                     Float f = Float.parseFloat(p.second.toString());
                     seriesData.add(new CustomDataEntry(p.first.toString(), f));
                 }
-                Set set = Set.instantiate();
+                set = Set.instantiate();
                 set.data(seriesData);
                 Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
 
-                Line series1 = cartesian.line(series1Mapping);
+                Log.d(TAG, "NewSeries:" + series1Mapping);
+
+                series1 = cartesian.line(series1Mapping);
                 series1.name("Temperature");
+                series1.color("red");
                 series1.markers().enabled(true);
                 series1.markers()
                         .type(MarkerType.CIRCLE)
@@ -160,11 +174,7 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
                         .offsetX(5d)
                         .offsetY(5d);
 
-                cartesian.legend().enabled(true);
-                cartesian.legend().fontSize(13d);
-                cartesian.legend().padding(0d, 0d, 10d, 0d);
-
-                _chartView.setChart(cartesian);
+//                _chartView.setChart(cartesian);
             }
 
             @Override
