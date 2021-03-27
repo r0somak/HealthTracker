@@ -48,14 +48,11 @@
             android:layout_height="335dp"
             android:id="@+id/temp_list"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_show_plot"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="Show plot"/>
+        <com.anychart.AnyChartView
+            android:id="@+id/chart_view"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:padding="12dp"/>
 
     </LinearLayout>
 

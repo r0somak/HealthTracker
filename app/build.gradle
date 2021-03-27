@@ -65,4 +65,5 @@ dependencies {
     implementation 'com.jakewharton:butterknife:6.1.0'
     implementation 'com.sun.mail:android-mail:+'
     implementation 'com.sun.mail:android-activation:+'
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 }

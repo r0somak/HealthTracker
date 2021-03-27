@@ -13,6 +13,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Cartesian;
+import com.anychart.core.cartesian.series.Line;
+import com.anychart.data.Mapping;
+import com.anychart.data.Set;
+import com.anychart.enums.Anchor;
+import com.anychart.enums.MarkerType;
+import com.anychart.enums.TooltipPositionMode;
+import com.anychart.graphics.vector.Stroke;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,10 +56,12 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
     RecyclerViewAdapter adapter;
     ValueEventListener queryValueListener;
     ArrayList<String> itemList;
+    AnyChartView _chartView;
 
     EditText _temperatureText;
     MaterialButton _addTempButton;
     RecyclerView _recView;
+    Cartesian cartesian;
 
 
     @Override
@@ -59,6 +73,17 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
         user = mAuth.getCurrentUser();
 
         setContentView(R.layout.activity_temperature);
+
+        _chartView = findViewById(R.id.chart_view);
+        cartesian = AnyChart.line();
+        cartesian.animation(true);
+        cartesian.padding(10d, 20d, 5d, 20d);
+        cartesian.crosshair().enabled(true);
+        cartesian.crosshair().yLabel(true).yStroke((Stroke) null, null, null, (String) null, (String) null);
+        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
+        cartesian.title("Trend of temperature over time");
+        cartesian.yAxis(0).title("Temperature (Celsius)");
+        cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
 
         _temperatureText = (EditText)findViewById(R.id.input_temp);
         _addTempButton = (MaterialButton)findViewById(R.id.btn_add_temp);
@@ -113,6 +138,33 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
                 adapter = new RecyclerViewAdapter(getBaseContext(), data);
 //                adapter.setClickListener(this);
                 _recView.setAdapter(adapter);
+
+                List<DataEntry> seriesData = new ArrayList<>();
+                for(Pair p: data){
+                    Float f = Float.parseFloat(p.second.toString());
+                    seriesData.add(new CustomDataEntry(p.first.toString(), f));
+                }
+                Set set = Set.instantiate();
+                set.data(seriesData);
+                Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
+
+                Line series1 = cartesian.line(series1Mapping);
+                series1.name("Temperature");
+                series1.markers().enabled(true);
+                series1.markers()
+                        .type(MarkerType.CIRCLE)
+                        .size(4d);
+                series1.tooltip()
+                        .position("right")
+                        .anchor(Anchor.LEFT_CENTER)
+                        .offsetX(5d)
+                        .offsetY(5d);
+
+                cartesian.legend().enabled(true);
+                cartesian.legend().fontSize(13d);
+                cartesian.legend().padding(0d, 0d, 10d, 0d);
+
+                _chartView.setChart(cartesian);
             }
 
             @Override
@@ -157,5 +209,14 @@ public class TemperatureActivity extends AppCompatActivity  implements RecyclerV
         _temperatureText.setText(null);
         Toast.makeText(getBaseContext(), "Succesfully added", Toast.LENGTH_LONG).show();
         _addTempButton.setEnabled(true);
+    }
+
+
+    private class CustomDataEntry extends ValueDataEntry {
+
+        CustomDataEntry(String x, Float value) {
+            super(x, value);
+        }
+
     }
 }
