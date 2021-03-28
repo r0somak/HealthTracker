@@ -9,17 +9,11 @@ import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.auth.FirebaseAuth;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class TemperatureActivity extends FragmentActivity {
     private static final int NUM_PAGES = 2;
     private static final String TAG = "TemperatureActivity";
-
-    private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
 
     private FragmentStateAdapter pagerAdapter;
     private ViewPager2 viewPager;
@@ -30,15 +24,14 @@ public class TemperatureActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temperature);
 
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         viewPager = (ViewPager2) findViewById(R.id.pager);
         pagerAdapter = new ScreenSlidePagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
 
         tablayout = findViewById(R.id.tab_layout);
-        new TabLayoutMediator(tablayout, viewPager, (tab, position) -> tab.setText("TAB " + (position+1))).attach();
+        new TabLayoutMediator(tablayout, viewPager, (tab, position) -> tab.setText(
+                (position==0 ? "List" : "Chart") + "")
+        ).attach();
     }
 
     @Override
