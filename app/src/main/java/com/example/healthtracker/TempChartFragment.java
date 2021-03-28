@@ -35,11 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TempChartFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class TempChartFragment extends Fragment {
     private static final String TAG = "TemperatureChartFragment";
     private FirebaseAuth mAuth;
@@ -126,12 +122,7 @@ public class TempChartFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View chartView = inflater.inflate(R.layout.fragment_temp_chart, container, false);
         _chartView = chartView.findViewById(R.id.chart_view);
         cartesian = AnyChart.line();
