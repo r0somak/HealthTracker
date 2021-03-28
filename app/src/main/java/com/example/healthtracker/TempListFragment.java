@@ -42,6 +42,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -89,6 +90,7 @@ public class TempListFragment extends Fragment implements RecyclerViewAdapter.It
                     Pair<String, String> pair = new Pair<String, String>(postSnapshot.getKey(), postSnapshot.getValue().toString());
                     data.add(pair);
                 }
+                Collections.reverse(data);
                 adapter = new RecyclerViewAdapter(getContext(), data);
                 _recView.setAdapter(adapter);
             }
