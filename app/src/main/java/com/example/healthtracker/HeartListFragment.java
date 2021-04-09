@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -111,9 +112,8 @@ public class HeartListFragment extends Fragment implements HeartRecyclerViewAdap
         String systolic = _systText.getText().toString();
         String diastolic = _diastText.getText().toString();
         Date date = Calendar.getInstance().getTime();
-        mDatabase.child("users").child(user.getUid()).child("heart").child(toISO8601UTC(date)).child("rate").setValue(heartRate);
-        mDatabase.child("users").child(user.getUid()).child("heart").child(toISO8601UTC(date)).child("syst").setValue(systolic);
-        mDatabase.child("users").child(user.getUid()).child("heart").child(toISO8601UTC(date)).child("diast").setValue(diastolic);
+        Heart heart = new Heart(heartRate, systolic, diastolic);
+        mDatabase.child("users").child(user.getUid()).child("heart").child(toISO8601UTC(date)).setValue(heart);
         _rateText.setText(null);
         _systText.setText(null);
         _diastText.setText(null);
@@ -132,5 +132,23 @@ public class HeartListFragment extends Fragment implements HeartRecyclerViewAdap
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @IgnoreExtraProperties
+    public class Heart{
+        public String rate;
+        public String syst;
+        public String diast;
+
+        public Heart(){
+
+        }
+
+        public Heart(String rate, String syst, String diast)
+        {
+            this.rate = rate;
+            this.syst = syst;
+            this.diast = diast;
+        }
     }
 }
