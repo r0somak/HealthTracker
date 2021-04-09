@@ -43,16 +43,16 @@ public class HeartRecyclerViewAdapter extends RecyclerView.Adapter<HeartRecycler
         Pair<String, String> dataPair = mData.get(position);
         String date = dataPair.first;
         String dd = dataPair.second;
-        Log.w(TAG, "dd "+dd);
+//        Log.w(TAG, "dd "+dd);
         String val = dd.replaceAll("[{}\" ]", "");
-        Log.w(TAG, "dd "+val);
+//        Log.w(TAG, "dd "+val);
         Map<String, String> myMap = new HashMap<String, String>();
         String[] pairs = val.split(",");
         for (String pair : pairs) {
             String[] keyValue = pair.split("=");
             myMap.put(keyValue[0], String.valueOf(keyValue[1]));
         }
-        Log.e(TAG, "dd "+myMap);
+//        Log.e(TAG, "dd "+myMap);
         holder.myTextView.setText(date);
         holder.heartVal.setText(myMap.get("rate"));
         holder.systVal.setText(myMap.get("syst"));

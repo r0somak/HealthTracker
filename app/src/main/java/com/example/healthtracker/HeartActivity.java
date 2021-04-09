@@ -52,7 +52,7 @@ public class HeartActivity extends FragmentActivity {
         public Fragment createFragment(int position) {
             switch(position){
                 case 0: return HeartListFragment.newInstance();
-//                case 1: return HeartChartFragment.newInstance();
+                case 1: return HeartChartFragment.newInstance();
                 default: return HeartListFragment.newInstance();
             }
         }
