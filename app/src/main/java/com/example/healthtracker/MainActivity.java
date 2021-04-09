@@ -45,13 +45,19 @@ public class MainActivity extends AppCompatActivity {
 
         _calendarButton = (MaterialButton)findViewById(R.id.btn_calendar);
         _calendarButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, CalendarActivity.class));
+            startActivity(new Intent(this, UserSettingsActivity.class));
         });
 
         _userDisplayName.setText("Hello " + getUserName() + "!");
     }
 
-//    @Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+        _userDisplayName.setText("Hello " + getUserName() + "!");
+    }
+
+    //    @Override
 //    public void onStart() {
 //        super.onStart();
 //        // Check if user is signed in (non-null) and update UI accordingly.
